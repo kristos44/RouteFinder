@@ -3,6 +3,7 @@
 2. In console cd to dir {dir_where_repo_cloned}/src
 
 3. Run commands:
+
     javac Main.java RouteFindHashMap.java
     
     jar -cvf routefinder.jar Main.class RouteFindHashMap.class
