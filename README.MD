@@ -4,7 +4,9 @@
 
 3. Run commands:
     javac Main.java RouteFindHashMap.java
+    
     jar -cvf routefinder.jar Main.class RouteFindHashMap.class
+    
     java -cp ./routefinder.jar Main
     
 4. Program output should be printed on the screen
