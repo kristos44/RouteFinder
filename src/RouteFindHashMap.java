@@ -48,6 +48,14 @@ public class RouteFindHashMap {
         }
     }
 
+    private void printMaps() {
+        System.out.println("Connections map:");
+        printMap(connectionsMap);
+        System.out.println();
+        System.out.println("Connections mirror map:");
+        printMap(connectionsMapMirror);
+    }
+
     private void prepareMirror(Map<String, String> map, Map<String, String> mapMirr) {
         Iterator it = map.entrySet().iterator();
         while(it.hasNext()) {
@@ -68,11 +76,7 @@ public class RouteFindHashMap {
 
         prepareMirror(connectionsMap, connectionsMapMirror);
 
-        System.out.println("Connections map:");
-        printMap(connectionsMap);
-        System.out.println();
-        System.out.println("Connections mirror map:");
-        printMap(connectionsMapMirror);
+        printMaps();
     }
 
     public void prepareDummyData2() {
@@ -92,11 +96,7 @@ public class RouteFindHashMap {
 
         prepareMirror(connectionsMap, connectionsMapMirror);
 
-        System.out.println("Connections map:");
-        printMap(connectionsMap);
-        System.out.println();
-        System.out.println("Connections mirror map:");
-        printMap(connectionsMapMirror);
+        printMaps();
     }
 
     public void prepareDataFromFile(String path) {
