@@ -14,7 +14,9 @@
 
 
 Test files:
+
 cities.csv - list of cities base on which pairs of cities connections are created
+
 connections.txt - actual list of connections containing around million of items, _ sign was used to delimit cities
 as some of cities have - sign as part of the name   
     
