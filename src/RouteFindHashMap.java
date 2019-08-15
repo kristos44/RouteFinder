@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 public class RouteFindHashMap {
 
+    public static final double BILLION = 1000000000D;
+    public static final int PRINT_ALL_CITIES_LIMIT_SIZE = 100;
+
     HashMap<String, String> connectionsMap;
     HashMap<String, String> connectionsMapMirror;
     int connections;
@@ -231,10 +234,10 @@ public class RouteFindHashMap {
         getOutputMirror(out, connectionsMap, connectionsMapMirror);
         end = System.nanoTime();
         System.out.println();
-        System.out.println("Time spent: " + (end - start)/1000000000D + "sec");
-        System.out.println("Time spent (algorithm): " + (end - startOnlyAlgorithm)/1000000000D + "sec");
+        System.out.println("Time spent: " + (end - start) / BILLION + "sec");
+        System.out.println("Time spent (algorithm): " + (end - startOnlyAlgorithm) / BILLION + "sec");
 
-        if(out.length > 100) {
+        if(out.length > PRINT_ALL_CITIES_LIMIT_SIZE) {
             System.out.println("First and last city:");
             System.out.println(out[0] + " " + out[out.length -1]);
         } else {
