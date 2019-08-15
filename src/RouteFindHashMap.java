@@ -9,6 +9,9 @@ import java.util.stream.Stream;
 
 public class RouteFindHashMap {
 
+    public static final double BILLION = 1000000000D;
+    public static final int PRINT_ALL_CITIES_LIMIT_SIZE = 100;
+
     HashMap<String, String> connectionsMap;
     HashMap<String, String> connectionsMapMirror;
     int connections;
@@ -48,6 +51,14 @@ public class RouteFindHashMap {
         }
     }
 
+    private void printMaps() {
+        System.out.println("Connections map:");
+        printMap(connectionsMap);
+        System.out.println();
+        System.out.println("Connections mirror map:");
+        printMap(connectionsMapMirror);
+    }
+
     private void prepareMirror(Map<String, String> map, Map<String, String> mapMirr) {
         Iterator it = map.entrySet().iterator();
         while(it.hasNext()) {
@@ -68,11 +79,7 @@ public class RouteFindHashMap {
 
         prepareMirror(connectionsMap, connectionsMapMirror);
 
-        System.out.println("Connections map:");
-        printMap(connectionsMap);
-        System.out.println();
-        System.out.println("Connections mirror map:");
-        printMap(connectionsMapMirror);
+        printMaps();
     }
 
     public void prepareDummyData2() {
@@ -92,11 +99,7 @@ public class RouteFindHashMap {
 
         prepareMirror(connectionsMap, connectionsMapMirror);
 
-        System.out.println("Connections map:");
-        printMap(connectionsMap);
-        System.out.println();
-        System.out.println("Connections mirror map:");
-        printMap(connectionsMapMirror);
+        printMaps();
     }
 
     public void prepareDataFromFile(String path) {
@@ -151,7 +154,7 @@ public class RouteFindHashMap {
 
             BufferedReader b = new BufferedReader(new FileReader(f));
 
-            String readLine = "";
+            String readLine;
 
             while ((readLine = b.readLine()) != null) {
                 parts = readLine.split("_");
@@ -169,7 +172,7 @@ public class RouteFindHashMap {
         Iterator it = connectionsMap.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            if(occurrences.containsKey(pair.getKey())) {
+            if (occurrences.containsKey(pair.getKey())) {
                 occurrences.remove(pair.getKey());
             } else {
                 occurrences.put((String) pair.getKey(), 1);
@@ -212,15 +215,6 @@ public class RouteFindHashMap {
                     out[end - 1] = val;
                     connMap.remove(val);
                 }
-                if(i % 10 == 0) {
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-//                System.out.println("Thread " + i);
             }
         });
 
@@ -228,7 +222,6 @@ public class RouteFindHashMap {
 
         for(int i = 0; i < out.length/2; i++) {
             int start = i;
-//            int end = out.length - 1 - i;
 
             if (connMap.containsKey(out[start])) {
                 String val = connMap.remove(out[start]);
@@ -239,15 +232,6 @@ public class RouteFindHashMap {
                 out[start + 1] = val;
                 connMap.remove(val);
             }
-            if(i % 10 == 0) {
-                try {
-                    Thread.sleep(1);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-//            System.out.println("Main " + i);
         }
     }
 
@@ -257,10 +241,10 @@ public class RouteFindHashMap {
         getOutputMirror(out, connectionsMap, connectionsMapMirror);
         end = System.nanoTime();
         System.out.println();
-        System.out.println("Time spent: " + (end - start)/1000000000D + "sec");
-        System.out.println("Time spent (algorithm): " + (end - startOnlyAlgorithm)/1000000000D + "sec");
+        System.out.println("Time spent: " + (end - start) / BILLION + "sec");
+        System.out.println("Time spent (algorithm): " + (end - startOnlyAlgorithm) / BILLION + "sec");
 
-        if(out.length > 100) {
+        if(out.length > PRINT_ALL_CITIES_LIMIT_SIZE) {
             System.out.println("First and last city:");
             System.out.println(out[0] + " " + out[out.length -1]);
         } else {
