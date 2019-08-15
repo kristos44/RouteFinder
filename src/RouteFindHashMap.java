@@ -199,9 +199,29 @@ public class RouteFindHashMap {
 
     private void getOutputMirror(String[] out, HashMap<String, String> connMap, HashMap<String, String> connMapMirr) {
 
+        Thread thread = new Thread(() -> {
+            for(int i = 0; i < out.length/2; i++) {
+                int end = out.length - 1 - i;
+
+                if (connMap.containsKey(out[end])) {
+                    String val = connMap.remove(out[end]);
+                    out[end - 1] = val;
+                    connMapMirr.remove(val);
+                } else if (connMapMirr.containsKey(out[end])) {
+                    String val = connMapMirr.remove(out[end]);
+                    out[end - 1] = val;
+                    connMap.remove(val);
+                }
+
+//                System.out.println("Thread " + i);
+            }
+        });
+
+        thread.start();
+
         for(int i = 0; i < out.length/2; i++) {
             int start = i;
-            int end = out.length - 1 - i;
+//            int end = out.length - 1 - i;
 
             if (connMap.containsKey(out[start])) {
                 String val = connMap.remove(out[start]);
@@ -213,15 +233,7 @@ public class RouteFindHashMap {
                 connMap.remove(val);
             }
 
-            if (connMap.containsKey(out[end])) {
-                String val = connMap.remove(out[end]);
-                out[end - 1] = val;
-                connMapMirr.remove(val);
-            } else if (connMapMirr.containsKey(out[end])) {
-                String val = connMapMirr.remove(out[end]);
-                out[end - 1] = val;
-                connMap.remove(val);
-            }
+//            System.out.println("Main " + i);
         }
     }
 
