@@ -47,35 +47,14 @@ public class RouteFindHashMap {
         System.out.println("Connections mirror map:");
         printMap(connectionsMapMirror);
     }
-    
-    public void prepareDummyData() {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
-        switchExistingLoop("Wrocław", "Poznań", connectionsMap);
-        switchExistingLoop("Legnica", "Opole", connectionsMap);
-        switchExistingLoop("Poznań", "Szczecin", connectionsMap);
-        switchExistingLoop("Opole", "Kluczbork", connectionsMap);
-        switchExistingLoop("Wrocław", "Legnica", connectionsMap);
+
+    public void prepareDummyData(String[][] citiesArr) {
+        for(String [] connection : citiesArr) {
+            switchExistingLoop(connection[0], connection[1], connectionsMap);
+        }
     }
 
-    public void prepareDummyData2() {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
-        switchExistingLoop("Krosno", "Rzeszów", connectionsMap);
-        switchExistingLoop("Chełm", "Zamość", connectionsMap);
-        switchExistingLoop("Krosno", "Przemyśl", connectionsMap);
-        switchExistingLoop("Puławy", "Radom", connectionsMap);
-        switchExistingLoop("Zamość", "Przemyśl", connectionsMap);
-        switchExistingLoop("Rzeszów", "Tarnów", connectionsMap);
-        switchExistingLoop("Kielce", "Sandomierz", connectionsMap);
-        switchExistingLoop("Kielce", "Tarnów", connectionsMap);
-        switchExistingLoop("Chełm", "Lublin", connectionsMap);
-        switchExistingLoop("Puławy", "Sandomierz", connectionsMap);
-    }
-
-    public void prepareDataFromFile(String path) {
+    public void prepareDataFromCitiesFile(String path) {
         start = System.nanoTime();
         connectionsMap = new HashMap<>();
         connectionsMapMirror = new HashMap<>();
