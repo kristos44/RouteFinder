@@ -212,6 +212,13 @@ public class RouteFindHashMap {
                     out[end - 1] = val;
                     connMap.remove(val);
                 }
+                if(i % 10 == 0) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
 
 //                System.out.println("Thread " + i);
             }
@@ -231,6 +238,13 @@ public class RouteFindHashMap {
                 String val = connMapMirr.remove(out[start]);
                 out[start + 1] = val;
                 connMap.remove(val);
+            }
+            if(i % 10 == 0) {
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
 //            System.out.println("Main " + i);
