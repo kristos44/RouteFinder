@@ -4,9 +4,9 @@
 
 3. Run commands:
 
-    javac Main.java RouteFindHashMap.java
+    javac Main.java RouteFinderHashMaps.java
     
-    jar -cvf routefinder.jar Main.class RouteFindHashMap.class
+    jar -cvf routefinder.jar Main.class RouteFinderHashMaps.class
     
     java -cp ./routefinder.jar Main
     

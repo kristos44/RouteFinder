@@ -22,18 +22,18 @@ public class Main {
                 {"Puławy", "Sandomierz"}
         };
 
-        RouteFindHashMap routeFindHashMap = new RouteFindHashMap();
+        RouteFinderHashMaps routeFinderHashMaps = new RouteFinderHashMaps();
 
-        routeFindHashMap.prepareDataFromCitiesFile("/tmp/cities.csv");
-        routeFindHashMap.doIt();
+        routeFinderHashMaps.prepareDataFromCitiesFile("/tmp/cities.csv");
+        routeFinderHashMaps.doIt();
 
-        routeFindHashMap.prepareDummyData(dummpyData);
-        routeFindHashMap.doIt();
+        routeFinderHashMaps.prepareDummyData(dummpyData);
+        routeFinderHashMaps.doIt();
 
-        routeFindHashMap.prepareDummyData(dummyData2);
-        routeFindHashMap.doIt();
+        routeFinderHashMaps.prepareDummyData(dummyData2);
+        routeFinderHashMaps.doIt();
 
-        routeFindHashMap.prepareDataFromConnectionsFile("/tmp/connections.txt");
-        routeFindHashMap.doIt();
+        routeFinderHashMaps.prepareDataFromConnectionsFile("/tmp/connections.txt");
+        routeFinderHashMaps.doIt();
     }
 }

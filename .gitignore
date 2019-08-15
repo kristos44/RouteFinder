@@ -2,3 +2,4 @@
 *.jar
 *.iml
 *.class
+out/
