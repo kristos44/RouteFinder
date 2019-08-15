@@ -20,17 +20,6 @@ public class RouteFindHashMap {
     long start;
     long end;
 
-    private void switchExisting(String key, String value, Map<String, String> connMap) {
-        if(connMap.containsKey(key)) {
-            String tempKey = connMap.get(key);
-            String tempValue = key;
-            connMap.put(key, value);
-            switchExisting(tempKey, tempValue, connMap);
-        } else {
-            connMap.put(key, value);
-        }
-    }
-
     private void switchExistingLoop(String key, String value, Map<String, String> connMap) {
         while(connMap.containsKey(key)) {
             String tempKey = connMap.get(key);
@@ -58,15 +47,7 @@ public class RouteFindHashMap {
         System.out.println("Connections mirror map:");
         printMap(connectionsMapMirror);
     }
-
-    private void prepareMirror(Map<String, String> map, Map<String, String> mapMirr) {
-        Iterator it = map.entrySet().iterator();
-        while(it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            mapMirr.put((String) pair.getValue(), (String) pair.getKey());
-        }
-    }
-
+    
     public void prepareDummyData() {
         start = System.nanoTime();
         connectionsMap = new HashMap<>();
@@ -76,10 +57,6 @@ public class RouteFindHashMap {
         switchExistingLoop("Poznań", "Szczecin", connectionsMap);
         switchExistingLoop("Opole", "Kluczbork", connectionsMap);
         switchExistingLoop("Wrocław", "Legnica", connectionsMap);
-
-        prepareMirror(connectionsMap, connectionsMapMirror);
-
-        printMaps();
     }
 
     public void prepareDummyData2() {
@@ -96,10 +73,6 @@ public class RouteFindHashMap {
         switchExistingLoop("Kielce", "Tarnów", connectionsMap);
         switchExistingLoop("Chełm", "Lublin", connectionsMap);
         switchExistingLoop("Puławy", "Sandomierz", connectionsMap);
-
-        prepareMirror(connectionsMap, connectionsMapMirror);
-
-        printMaps();
     }
 
     public void prepareDataFromFile(String path) {
@@ -131,14 +104,12 @@ public class RouteFindHashMap {
                 second = itSet.next();
             }
             if(l % 3 == 0) {
-                switchExisting(first, second, connectionsMap);
+                switchExistingLoop(first, second, connectionsMap);
             } else {
-                switchExisting(second, first, connectionsMap);
+                switchExistingLoop(second, first, connectionsMap);
             }
             l++;
         }
-
-        prepareMirror(connectionsMap, connectionsMapMirror);
     }
 
     public void prepareDataFromConnectionsFile(String path) {
@@ -163,11 +134,9 @@ public class RouteFindHashMap {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        prepareMirror(connectionsMap, connectionsMapMirror);
     }
 
-    private void findFirstAndLast() {
+    private void findFirstAndLastAndPrepareMirror() {
         HashMap<String, Integer> occurrences = new HashMap<>();
         Iterator it = connectionsMap.entrySet().iterator();
         while (it.hasNext()) {
@@ -182,6 +151,8 @@ public class RouteFindHashMap {
             } else {
                 occurrences.put((String) pair.getValue(), 1);
             }
+
+            connectionsMapMirror.put((String) pair.getValue(), (String) pair.getKey());
         }
 
         connections = connectionsMap.size();
@@ -230,7 +201,10 @@ public class RouteFindHashMap {
 
     public void doIt() {
         long startOnlyAlgorithm = System.nanoTime();
-        findFirstAndLast();
+        findFirstAndLastAndPrepareMirror();
+        if(out.length <= PRINT_ALL_CITIES_LIMIT_SIZE) {
+            printMaps();
+        }
         getOutputMirror(out, connectionsMap, connectionsMapMirror);
         end = System.nanoTime();
         System.out.println();
