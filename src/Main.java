@@ -24,8 +24,8 @@ public class Main {
 
         RouteFinderHashMaps routeFinderHashMaps = new RouteFinderHashMaps();
 
-        routeFinderHashMaps.prepareDataFromCitiesFile("/tmp/cities.csv");
-        routeFinderHashMaps.doIt();
+//        routeFinderHashMaps.prepareDataFromCitiesFile("/tmp/cities.csv");
+//        routeFinderHashMaps.doIt();
 
         routeFinderHashMaps.prepareDummyData(dummpyData);
         routeFinderHashMaps.doIt();
@@ -33,7 +33,7 @@ public class Main {
         routeFinderHashMaps.prepareDummyData(dummyData2);
         routeFinderHashMaps.doIt();
 
-        routeFinderHashMaps.prepareDataFromConnectionsFile("/tmp/connections.txt");
-        routeFinderHashMaps.doIt();
+//        routeFinderHashMaps.prepareDataFromConnectionsFile("/tmp/connections.txt");
+//        routeFinderHashMaps.doIt();
     }
 }
