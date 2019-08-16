@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
@@ -20,10 +21,7 @@ public class RouteFinderHashMaps {
     private long start;
     private long end;
 
-    private int occ;
-    private int occMirr;
-
-    private String[][] citiesArr;
+    private String[][] connectionsArr;
 
     private void switchExistingLoop(String key, String value, Map<String, String> connMap) {
         while(connMap.containsKey(key)) {
@@ -45,52 +43,25 @@ public class RouteFinderHashMaps {
         }
     }
 
-    private void printMaps() {
-        System.out.println("Connections map:");
-        printMap(connectionsMap);
-        System.out.println();
-        System.out.println("Connections mirror map:");
-        printMap(connectionsMapMirror);
-    }
-
-    private void findFirstAndLastAndPrepareMirror() {
+    private void findFirstAndLastAndPrepareConnectionsMap() {
         HashMap<String, Integer> occurrences = new HashMap<>();
-//        Iterator it = connectionsMap.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry pair = (Map.Entry) it.next();
-//            if(occurrences.containsKey(pair.getKey())) {
-//                occurrences.remove(pair.getKey());
-//            } else {
-//                occurrences.put((String) pair.getKey(), 1);
-//            }
-//            if(occurrences.containsKey(pair.getValue())) {
-//                occurrences.remove(pair.getValue());
-//            } else {
-//                occurrences.put((String) pair.getValue(), 1);
-//            }
-//
-//            connectionsMapMirror.put((String) pair.getValue(), (String) pair.getKey());
-//        }
 
-        for(int i = 1; i <= citiesArr.length; i++) {
-            if(occurrences.containsKey(citiesArr[i-1][0])) {
-                occurrences.remove(citiesArr[i-1][0]);
+        for(int i = 1; i <= connectionsArr.length; i++) {
+            int j = i - 1;
+            String firstCity = connectionsArr[j][0];
+            String secondCity = connectionsArr[j][1];
+            if(occurrences.containsKey(firstCity)) {
+                occurrences.remove(firstCity);
             } else {
-                occurrences.put(citiesArr[i-1][0], i);
+                occurrences.put(firstCity, i);
             }
-            if(occurrences.containsKey(citiesArr[i-1][1])) {
-                occurrences.remove(citiesArr[i-1][1]);
+            if(occurrences.containsKey(secondCity)) {
+                occurrences.remove(secondCity);
             } else {
-                occurrences.put(citiesArr[i-1][1], -i);
+                occurrences.put(secondCity, -i);
             }
 
-//            for(String[] connection : citiesArr) {
-//                System.out.println(Arrays.toString(connection));
-//            }
-
-//            System.out.println(citiesArr[i-1][0] + " & " + citiesArr[i-1][1]);
-
-            switchExistingLoop(citiesArr[i-1][0], citiesArr[i-1][1], connectionsMap);
+            switchExistingLoop(firstCity, secondCity, connectionsMap);
         }
 
         connections = connectionsMap.size();
@@ -103,88 +74,63 @@ public class RouteFinderHashMaps {
             if (j == 0) {
                 out[0] = pair.getKey().toString();
                 int value = (int) pair.getValue();
-                int i, k;
-                if(value > 0) {
-                    i = value - 1;
-                    k = 1;
-                } else {
-                    i = -value - 1;
-                    k = 0;
-                }
-                out[1] = citiesArr[i][k];
-                switchExistingLoop(out[0], out[1], connectionsMap);
-                connectionsMap.remove(out[0]);
+                int[] cityIndex = getCityIndex(value);
+                out[1] = connectionsArr[cityIndex[0]][cityIndex[1]];
                 j++;
             } else {
                 out[connections] = pair.getKey().toString();
                 int value = (int) pair.getValue();
-                int i, k;
-                if(value > 0) {
-                    i = value - 1;
-                    k = 1;
-                } else {
-                    i = -value - 1;
-                    k = 0;
-//                    System.out.println("Dupa " + -value + " " + i);
-                }
-                out[connections - 1] = citiesArr[i][k];
-                switchExistingLoop(out[connections], out[connections - 1], connectionsMap);
+                int[] cityIndex = getCityIndex(value);
+                out[connections - 1] = connectionsArr[cityIndex[0]][cityIndex[1]];
+                switchExistingLoop(out[connections - 1], out[connections], connectionsMap);
                 connectionsMap.remove(out[connections]);
+                connectionsMap.remove(out[connections - 1]);
             }
         }
 
-        Iterator itConnectionsMap = connectionsMap.entrySet().iterator();
-        while(itConnectionsMap.hasNext()) {
-            Map.Entry pair = (Map.Entry) itConnectionsMap.next();
-            connectionsMapMirror.put(pair.getValue().toString(), pair.getKey().toString());
+        connectionsMap.remove(out[0]);
+
+    }
+
+    private int[] getCityIndex(int value) {
+        int i, k;
+        if(value > 0) {
+            i = value - 1;
+            k = 1;
+        } else {
+            i = -value - 1;
+            k = 0;
         }
+
+        int [] intArr = {i, k};
+        return intArr;
     }
 
     private void getOutputMirror(String[] out, HashMap<String, String> connMap, HashMap<String, String> connMapMirr) {
-        for(int i = 1; i < out.length; i++) {
+        for(int i = 1; i < out.length - 3; i++) {
             int start = i;
-//            int end = out.length - 1 - i;
 
             if (connMap.containsKey(out[start])) {
                 String val = connMap.remove(out[start]);
                 out[start + 1] = val;
                 connMapMirr.remove(val);
-                occ++;
-            } else if (connMapMirr.containsKey(out[start])) {
-                String val = connMapMirr.remove(out[start]);
-                out[start + 1] = val;
-                connMap.remove(val);
-                occMirr++;
             }
-
-//            if (connMap.containsKey(out[end])) {
-//                String val = connMap.remove(out[end]);
-//                out[end - 1] = val;
-//                connMapMirr.remove(val);
-//                occ++;
-//            } else if (connMapMirr.containsKey(out[end])) {
-//                String val = connMapMirr.remove(out[end]);
-//                out[end - 1] = val;
-//                connMap.remove(val);
-//                occMirr++;
-//            }
         }
     }
 
-    public void prepareDummyData(String[][] citiesArr) {
+    private void resetVars() {
         start = System.nanoTime();
-//        for(String [] connection : citiesArr) {
-//            switchExistingLoop(connection[0], connection[1], connectionsMap);
-//        }
         connectionsMap = new HashMap<>();
         connectionsMapMirror = new HashMap<>();
-        this.citiesArr = citiesArr;
+    }
+
+    public void prepareDummyData(String[][] citiesArr) {
+        resetVars();
+        this.connectionsArr = citiesArr;
     }
 
     public void prepareDataFromCitiesFile(String path) {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
+        resetVars();
         String fileName = path;
 
         HashSet<String> citesSet = new HashSet<>();
@@ -198,6 +144,8 @@ public class RouteFinderHashMaps {
 
         Iterator<String> itSet = citesSet.iterator();
 
+        connectionsArr = new String[citesSet.size()][2];
+
         int l = 0;
         String first;
         String second = "";
@@ -210,19 +158,21 @@ public class RouteFinderHashMaps {
                 second = itSet.next();
             }
             if(l % 3 == 0) {
-                switchExistingLoop(first, second, connectionsMap);
+                connectionsArr[l][0] = first;
+                connectionsArr[l][1] = second;
             } else {
-                switchExistingLoop(second, first, connectionsMap);
+                connectionsArr[l][0] = first;
+                connectionsArr[l][1] = second;
             }
             l++;
         }
     }
 
-    public void prepareDataFromConnectionsFile(String path) {
+    public void prepareDataFromConnectionsFile(String pathString) {
         start = System.nanoTime();
         connectionsMap = new HashMap<>();
         connectionsMapMirror = new HashMap<>();
-        String fileName = path;
+        String fileName = pathString;
 
         String[] parts;
         try {
@@ -231,11 +181,17 @@ public class RouteFinderHashMaps {
 
             BufferedReader b = new BufferedReader(new FileReader(f));
 
-            String readLine = "";
+            String readLine;
 
+            Path path = Paths.get(pathString);
+            connectionsArr = new String[(int) Files.lines(path).count()][2];
+
+            int i = 0;
             while ((readLine = b.readLine()) != null) {
                 parts = readLine.split("_");
-                switchExistingLoop(parts[0], parts[1], connectionsMap);
+                connectionsArr[i][0] = parts[0];
+                connectionsArr[i][1] = parts[1];
+                i++;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -243,12 +199,11 @@ public class RouteFinderHashMaps {
     }
 
     public void doIt() {
-        occ = 0;
-        occMirr = 0;
         long startOnlyAlgorithm = System.nanoTime();
-        findFirstAndLastAndPrepareMirror();
+        findFirstAndLastAndPrepareConnectionsMap();
         if(out.length <= PRINT_ALL_CITIES_LIMIT_SIZE) {
-            printMaps();
+            System.out.println("Connections map:");
+            printMap(connectionsMap);
         }
         getOutputMirror(out, connectionsMap, connectionsMapMirror);
         end = System.nanoTime();
@@ -264,8 +219,6 @@ public class RouteFinderHashMaps {
             System.out.println(Arrays.toString(out));
         }
 
-        System.out.println("Occurences: " + occ);
-        System.out.println("Occurences mirror: " + occMirr);
         System.out.println("**********");
         System.out.println();
     }
