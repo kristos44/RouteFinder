@@ -14,7 +14,6 @@ public class RouteFinderHashMaps {
     public static final int PRINT_ALL_CITIES_LIMIT_SIZE = 100;
 
     private HashMap<String, String> connectionsMap;
-    private HashMap<String, String> connectionsMapMirror;
     private int connections;
     private String[] out;
 
@@ -106,14 +105,13 @@ public class RouteFinderHashMaps {
         return intArr;
     }
 
-    private void getOutputMirror(String[] out, HashMap<String, String> connMap, HashMap<String, String> connMapMirr) {
+    private void getOutputMirror(String[] out, HashMap<String, String> connMap) {
         for(int i = 1; i < out.length - 3; i++) {
             int start = i;
 
             if (connMap.containsKey(out[start])) {
                 String val = connMap.remove(out[start]);
                 out[start + 1] = val;
-                connMapMirr.remove(val);
             }
         }
     }
@@ -121,7 +119,6 @@ public class RouteFinderHashMaps {
     private void resetVars() {
         start = System.nanoTime();
         connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
     }
 
     public void prepareDummyData(String[][] citiesArr) {
@@ -169,9 +166,7 @@ public class RouteFinderHashMaps {
     }
 
     public void prepareDataFromConnectionsFile(String pathString) {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
+        resetVars();
         String fileName = pathString;
 
         String[] parts;
@@ -205,7 +200,7 @@ public class RouteFinderHashMaps {
             System.out.println("Connections map:");
             printMap(connectionsMap);
         }
-        getOutputMirror(out, connectionsMap, connectionsMapMirror);
+        getOutputMirror(out, connectionsMap);
         end = System.nanoTime();
         System.out.println();
         System.out.println("Time spent: " + (end - start) / BILLION + "sec");
