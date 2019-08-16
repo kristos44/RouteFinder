@@ -111,16 +111,21 @@ public class RouteFinderHashMaps {
         }
     }
 
+    private void resetVars() {
+        start = System.nanoTime();
+        connectionsMap = new HashMap<>();
+        connectionsMapMirror = new HashMap<>();
+    }
+
     public void prepareDummyData(String[][] citiesArr) {
+        resetVars();
         for(String [] connection : citiesArr) {
             switchExistingLoop(connection[0], connection[1], connectionsMap);
         }
     }
 
     public void prepareDataFromCitiesFile(String path) {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
+        resetVars();
         String fileName = path;
 
         HashSet<String> citesSet = new HashSet<>();
@@ -155,9 +160,7 @@ public class RouteFinderHashMaps {
     }
 
     public void prepareDataFromConnectionsFile(String path) {
-        start = System.nanoTime();
-        connectionsMap = new HashMap<>();
-        connectionsMapMirror = new HashMap<>();
+        resetVars();
         String fileName = path;
 
         String[] parts;
