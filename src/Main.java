@@ -1,17 +1,6 @@
-import java.util.LinkedList;
-import java.util.*;
-
 public class Main {
 
     public static void main(String[] args) {
-//        LinkedList<LinkedList<String>> data = new LinkedList<>();
-//        data.add(new LinkedList(Arrays.asList("Wrocław", "Poznań")));
-//        data.add(new LinkedList(Arrays.asList("Legnica", "Opole")));
-//        data.add(new LinkedList(Arrays.asList("Poznań", "Szczecin")));
-//        data.add(new LinkedList(Arrays.asList("Opole", "Kluczbork")));
-//        data.add(new LinkedList(Arrays.asList("Wrocław", "Legnica")));
-//        System.out.println(data.get(0).get(0));
-
         String[][] dummpyData = {
                 {"Wrocław", "Poznań"},
                 {"Legnica", "Opole"},
@@ -67,9 +56,6 @@ public class Main {
         routeFinderHashMaps.doIt();
 
         routeFinderHashMaps.prepareDataFromConnectionsFile("/tmp/connections.txt");
-        routeFinderHashMaps.doIt();
-
-        routeFinderHashMaps.prepareDummyData(dummyData4);
         routeFinderHashMaps.doIt();
 
         routeFinderHashMaps.prepareDummyData(dummyData4);
