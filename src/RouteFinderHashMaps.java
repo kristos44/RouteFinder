@@ -43,21 +43,20 @@ public class RouteFinderHashMaps {
     }
 
     private void findFirstAndLastAndPrepareConnectionsMap() {
-        HashMap<String, Integer> occurrences = new HashMap<>();
+        HashMap<String, String> occurrences = new HashMap<>();
 
-        for(int i = 1; i <= connectionsArr.length; i++) {
-            int j = i - 1;
-            String firstCity = connectionsArr[j][0];
-            String secondCity = connectionsArr[j][1];
+        for(int i = 0; i < connectionsArr.length; i++) {
+            String firstCity = connectionsArr[i][0];
+            String secondCity = connectionsArr[i][1];
             if(occurrences.containsKey(firstCity)) {
                 occurrences.remove(firstCity);
             } else {
-                occurrences.put(firstCity, i);
+                occurrences.put(firstCity, connectionsArr[i][1]);
             }
             if(occurrences.containsKey(secondCity)) {
                 occurrences.remove(secondCity);
             } else {
-                occurrences.put(secondCity, -i);
+                occurrences.put(secondCity, connectionsArr[i][0]);
             }
 
             switchExistingLoop(firstCity, secondCity, connectionsMap);
@@ -72,15 +71,11 @@ public class RouteFinderHashMaps {
             Map.Entry pair = (Map.Entry)itOccurrencesMap.next();
             if (j == 0) {
                 out[0] = pair.getKey().toString();
-                int value = (int) pair.getValue();
-                int[] cityIndex = getCityIndex(value);
-                out[1] = connectionsArr[cityIndex[0]][cityIndex[1]];
+                out[1] = pair.getValue().toString();
                 j++;
             } else {
                 out[connections] = pair.getKey().toString();
-                int value = (int) pair.getValue();
-                int[] cityIndex = getCityIndex(value);
-                out[connections - 1] = connectionsArr[cityIndex[0]][cityIndex[1]];
+                out[connections - 1] = pair.getValue().toString();
                 switchExistingLoop(out[connections - 1], out[connections], connectionsMap);
                 connectionsMap.remove(out[connections]);
                 connectionsMap.remove(out[connections - 1]);
@@ -89,20 +84,6 @@ public class RouteFinderHashMaps {
 
         connectionsMap.remove(out[0]);
 
-    }
-
-    private int[] getCityIndex(int value) {
-        int i, k;
-        if(value > 0) {
-            i = value - 1;
-            k = 1;
-        } else {
-            i = -value - 1;
-            k = 0;
-        }
-
-        int [] intArr = {i, k};
-        return intArr;
     }
 
     private void getOutputMirror(String[] out, HashMap<String, String> connMap) {
